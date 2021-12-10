@@ -35,22 +35,24 @@ char *byte_to_base64[65] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K
 
 char *base64_2_str(u_int8_t *base64bytes) {
     size_t len = strlen(base64bytes);
-    char *str = "";
-    printf("%ld\n", len);
+    char *str = "\0";
+    str = malloc(sizeof(len));
     for(int i = 0; i < len; i++) {
-        printf("%s", byte_to_base64[(int)base64bytes[i]]);
         strcat(str, byte_to_base64[(int)base64bytes[i]]);
     }
     return str;
 }
 
 int main() {
-
     u_int8_t *hex = str_to_hexbytes(input);
     u_int8_t *base64 = hexbytes_to_base64bytes(hex);
-    printf("%ld\n", strlen(hex));
+
+    // for(int i = 0; i < strlen(base64); i++) {
+    //     printf("%d ", (int)base64[i]);
+    // }
+
     char *result = base64_2_str(base64);
-    printf("%s\n", result);
+    printf("\n%s\n", result);
     
     return 0;
 }
