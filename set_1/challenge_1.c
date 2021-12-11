@@ -14,9 +14,10 @@ char *byte_to_base64[65] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K
 unsigned int *str_to_hexbytes(const char *hex_str) {
     size_t len = strlen(hex_str);
     unsigned int *hex = malloc(sizeof(unsigned int)* len/2);
-    for(int i, j = 0; i < len; i += 2, j++) {
-        char tmp[2];
+    for(int i = 0, j = 0; i < len; i += 2, j++) { 
+        char tmp[3];
         strncpy(tmp, hex_str+i, 2);
+        tmp[2]=0;
         hex[j] = strtol(tmp, NULL, 16);
     }
     return hex;
@@ -34,7 +35,7 @@ unsigned int *hexbytes_to_base64bytes(unsigned int *hexbytes, size_t len) {
     return base64bytes;
 }
 
-char *base64_2_str(unsigned int *base64bytes, size_t len) {
+char *base64_to_str(unsigned int *base64bytes, size_t len) {
     char *str = malloc(sizeof(char)*len);
     for(int i = 0; i <= len; i++) {
         strcat(str, byte_to_base64[(int)base64bytes[i]]);
@@ -43,12 +44,11 @@ char *base64_2_str(unsigned int *base64bytes, size_t len) {
     return str;
 }
 
-// Works perfectly
 char *hex_to_base64(const char *input) {
     size_t len = strlen(input)/2;
     unsigned int *hex = str_to_hexbytes(input);
     unsigned int *base64 = hexbytes_to_base64bytes(hex, len);
-    return base64_2_str(base64, len);
+    return base64_to_str(base64, len);
 }
 
 int main() {
