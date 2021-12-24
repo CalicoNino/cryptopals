@@ -15,11 +15,11 @@ int main(void)
     size_t len = strlen(cipherhex);
     unsigned int *hexbytes = str_to_hexbytes(cipherhex);
     unsigned int tmp = get_most_frequent_byte(hexbytes, len / 2);
-    printf("Decrypted: %x\n", 0x78 ^ 'x');
-    printf("Most Frequent Letter: %x\n", tmp);
+    printf("Most Frequent Letter: %c\n", tmp);
+    printf("Decrypted Key: %c\n", 0x78 ^ ' '); //Space is the most frequent character
     for (int i = 0; i < len / 2; i++)
     {
-        printf("%c", (0x78 ^ 'T') ^ hexbytes[i]);
+        printf("%c", 0x58 ^ hexbytes[i]);
     }
     return 0;
 }
