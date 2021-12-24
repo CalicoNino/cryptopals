@@ -17,4 +17,6 @@ char *xor_hex(const char *input_1, const char *input_2);
 
 unsigned int get_most_frequent_byte(unsigned int *bytes, size_t len);
 
+int is_english_symbol(unsigned int c);
+
 #endif // SET_1_

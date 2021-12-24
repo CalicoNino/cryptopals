@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <regex.h>
 #include "../set_1.h"
 
 // Detect single-character XOR
@@ -29,7 +30,6 @@ int main(void)
         {
             printf("%c", (tmp ^ ' ') ^ hexbytes[i]);
         }
-        // printf("%s", line);
     }
 
     fclose(fptr);

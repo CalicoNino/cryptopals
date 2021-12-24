@@ -3,7 +3,13 @@
 #include <string.h>
 #include "set_1.h"
 
-char *byte_to_base64[65] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+", "/"};
+char *byte_to_base64[65] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
+                            "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
+                            "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d",
+                            "e", "f", "g", "h", "i", "j", "k", "l", "m", "n",
+                            "o", "p", "q", "r", "s", "t", "u", "v", "w", "x",
+                            "y", "z", "0", "1", "2", "3", "4", "5", "6", "7",
+                            "8", "9", "+", "/"};
 
 unsigned int *str_to_hexbytes(const char *hex_str)
 {
@@ -115,4 +121,25 @@ unsigned int get_most_frequent_byte(unsigned int *bytes, size_t len)
         }
     }
     return elem;
+}
+
+int is_english_symbol(unsigned int c)
+{
+    if ((0x61 <= c && c <= 0x79)    // a -> y
+        || (0x41 <= c && c <= 0x59) // A -> Y
+        || (0x30 <= c && c <= 0x39) // 0 -> 9
+        || (0x20 <= c && c <= 0x22) // space ! "
+        || c == 0x27                // '
+        || c == 0x0A                // \n
+        || c == 0x2C                // ,
+        || c == 0x2E                // .
+        || c == 0x3F                // ?
+        || c == 0x5A                // Z
+        || c == 0x7A                // z
+
+    )
+    {
+        return 1;
+    }
+    return 0;
 }
