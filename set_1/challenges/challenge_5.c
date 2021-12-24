@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include "../set_1.h"
 
 // Implement repeating-key XOR
@@ -16,5 +18,8 @@ int main(void)
 {
     const char *plaintext = "Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal";
     const char *key = "ICE";
+
+    char *result = xor_text(plaintext, key);
+    printf("%s", result);
     return 0;
 }

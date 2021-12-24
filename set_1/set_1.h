@@ -21,4 +21,6 @@ int is_english_symbol(unsigned int c);
 
 char *attack_single_byte_xor(const char *input);
 
+char *xor_text(const char *plaintext, const char *key);
+
 #endif // SET_1_

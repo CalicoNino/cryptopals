@@ -177,3 +177,19 @@ char *attack_single_byte_xor(const char *input)
     }
     return 0;
 }
+
+char *xor_text(const char *plaintext, const char *key)
+{
+    size_t len = strlen(plaintext);
+    unsigned int *bytes = malloc(sizeof(unsigned int) * len);
+
+    for (int i = 0, j = 0; i < len; i++, j++)
+    {
+        if (j == strlen(key))
+        {
+            j = 0;
+        }
+        bytes[i] = plaintext[i] ^ key[j];
+    }
+    return bytes_to_str(bytes, len * 2);
+}
