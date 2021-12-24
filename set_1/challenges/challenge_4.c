@@ -1,7 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <regex.h>
 #include "../set_1.h"
 
 // Detect single-character XOR
@@ -21,14 +19,11 @@ int main(void)
 
     while (fgets(line, sizeof(line), fptr))
     {
-        size_t len = strlen(line);
-        unsigned int *hexbytes = str_to_hexbytes(line);
-        unsigned int tmp = get_most_frequent_byte(hexbytes, len / 2);
-        printf("\nMost Frequent Letter: %c\n", tmp);
-        printf("Decrypted Key: %c\n", tmp ^ ' ');
-        for (int i = 0; i < len / 2; i++)
+        const char *cipherhex = line;
+        char *result = attack_single_byte_xor(cipherhex);
+        if (result != NULL)
         {
-            printf("%c", (tmp ^ ' ') ^ hexbytes[i]);
+            printf("%s", result);
         }
     }
 

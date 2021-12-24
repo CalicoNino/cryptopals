@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "../set_1.h"
 
 // Convert hex to base64: https://cryptopals.com/sets/1/challenges/1

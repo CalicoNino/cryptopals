@@ -11,6 +11,12 @@ char *byte_to_base64[65] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
                             "y", "z", "0", "1", "2", "3", "4", "5", "6", "7",
                             "8", "9", "+", "/"};
 
+char letter_frequencies[58] = {'E', 'e', 'T', 't', 'A', 'a', 'O', 'o', 'I', 'i', 'N', 'n', ' ', 'S',
+                               's', 'R', 'r', 'H', 'h', 'D', 'd', 'L', 'l', 'U', 'u', 'C', 'c', 'M',
+                               'm', 'F', 'f', 'Y', 'y', 'W', 'w', 'G', 'g', 'P', 'p', 'B', 'b', 'V',
+                               'v', 'K', 'k', 'X', 'x', 'Q', 'q', 'J', 'j', 'Z', 'z',
+                               '\'', '\"', '\n', '?', '!'};
+
 unsigned int *str_to_hexbytes(const char *hex_str)
 {
     int len = strlen(hex_str);
@@ -140,6 +146,34 @@ int is_english_symbol(unsigned int c)
     )
     {
         return 1;
+    }
+    return 0;
+}
+
+char *attack_single_byte_xor(const char *input)
+{
+    size_t len = strlen(input);
+    unsigned int *hexbytes = str_to_hexbytes(input);
+    unsigned int most_frequent_letter = get_most_frequent_byte(hexbytes, len / 2);
+    for (int j = 0; j < 58; j++)
+    {
+        char *str = malloc(sizeof(char) * len);
+        for (int i = 0; i < len / 2; i++)
+        {
+            unsigned int c = (most_frequent_letter ^ letter_frequencies[j]) ^ hexbytes[i];
+            if (!is_english_symbol(c))
+            {
+                break;
+            }
+            char tmp[3];
+            sprintf(tmp, "%c", c);
+            tmp[2] = 0;
+            strcat(str, tmp);
+        }
+        if (strlen(str) == len / 2)
+        {
+            return str;
+        }
     }
     return 0;
 }

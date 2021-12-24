@@ -19,4 +19,6 @@ unsigned int get_most_frequent_byte(unsigned int *bytes, size_t len);
 
 int is_english_symbol(unsigned int c);
 
+char *attack_single_byte_xor(const char *input);
+
 #endif // SET_1_
