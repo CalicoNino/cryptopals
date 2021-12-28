@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 #include "../set_1.h"
 
 // Implement repeating-key XOR

@@ -172,6 +172,7 @@ char *attack_single_byte_xor(const char *input)
         }
         if (strlen(str) == len / 2)
         {
+            free(hexbytes);
             return str;
         }
     }
@@ -182,7 +183,6 @@ char *xor_text(const char *plaintext, const char *key)
 {
     size_t len = strlen(plaintext);
     unsigned int *bytes = malloc(sizeof(unsigned int) * len);
-
     for (int i = 0, j = 0; i < len; i++, j++)
     {
         if (j == strlen(key))
@@ -192,4 +192,27 @@ char *xor_text(const char *plaintext, const char *key)
         bytes[i] = plaintext[i] ^ key[j];
     }
     return bytes_to_str(bytes, len * 2);
+}
+
+unsigned int *text_to_bytes(const char *text)
+{
+    size_t len = strlen(text);
+    unsigned int *bytes = malloc(sizeof(unsigned int) * len);
+    for (int i = 0; i < len; i++)
+    {
+        bytes[i] = text[i];
+    }
+    return bytes;
+}
+
+int hamming_distance(unsigned int *input_1, unsigned int *input_2, size_t len)
+{
+    int distance = 0;
+    for (int i = 0; i < len; i++)
+    {
+        for (int tmp = input_1[i] ^ input_2[i]; tmp > 0; distance++, tmp &= (tmp - 1))
+            ;
+    }
+
+    return distance;
 }

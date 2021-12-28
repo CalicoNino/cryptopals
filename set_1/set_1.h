@@ -23,4 +23,8 @@ char *attack_single_byte_xor(const char *input);
 
 char *xor_text(const char *plaintext, const char *key);
 
+unsigned int *text_to_bytes(const char *text);
+
+int hamming_distance(unsigned int *input_1, unsigned int *input_2, size_t len);
+
 #endif // SET_1_
