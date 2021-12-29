@@ -19,6 +19,7 @@ int main(void)
 
     while (fgets(line, sizeof(line), fptr))
     {
+        printf("%s", line);
         const char *cipherhex = line;
         char *result = attack_single_byte_xor(cipherhex);
         if (result != NULL)

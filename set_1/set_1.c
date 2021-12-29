@@ -3,13 +3,21 @@
 #include <string.h>
 #include "set_1.h"
 
-char *byte_to_base64[65] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
-                            "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
-                            "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d",
-                            "e", "f", "g", "h", "i", "j", "k", "l", "m", "n",
-                            "o", "p", "q", "r", "s", "t", "u", "v", "w", "x",
-                            "y", "z", "0", "1", "2", "3", "4", "5", "6", "7",
-                            "8", "9", "+", "/"};
+const char *index_to_base64[65] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
+                                   "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
+                                   "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d",
+                                   "e", "f", "g", "h", "i", "j", "k", "l", "m", "n",
+                                   "o", "p", "q", "r", "s", "t", "u", "v", "w", "x",
+                                   "y", "z", "0", "1", "2", "3", "4", "5", "6", "7",
+                                   "8", "9", "+", "/"};
+
+const int B64index[256] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                           0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                           0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 62, 63, 62, 62, 63, 52, 53, 54, 55,
+                           56, 57, 58, 59, 60, 61, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6,
+                           7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 0,
+                           0, 0, 0, 63, 0, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+                           41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51};
 
 char letter_frequencies[58] = {'E', 'e', 'T', 't', 'A', 'a', 'O', 'o', 'I', 'i', 'N', 'n', ' ', 'S',
                                's', 'R', 'r', 'H', 'h', 'D', 'd', 'L', 'l', 'U', 'u', 'C', 'c', 'M',
@@ -19,7 +27,7 @@ char letter_frequencies[58] = {'E', 'e', 'T', 't', 'A', 'a', 'O', 'o', 'I', 'i',
 
 unsigned int *str_to_hexbytes(const char *hex_str)
 {
-    int len = strlen(hex_str);
+    size_t len = strlen(hex_str);
     unsigned int *hex = malloc(sizeof(unsigned int) * len / 2);
     for (int i = 0, j = 0; i < len; i += 2, j++)
     {
@@ -31,6 +39,39 @@ unsigned int *str_to_hexbytes(const char *hex_str)
     return hex;
 }
 
+unsigned int *str_to_base64bytes(const char *base64_str)
+{
+    size_t len = strlen(base64_str);
+    unsigned int *base64 = malloc(sizeof(unsigned int) * len);
+    for (int i = 0; i < len; i++)
+    {
+        base64[i] = B64index[(int)base64_str[i]];
+    }
+    return base64;
+}
+
+unsigned int *base64bytes_to_hexbytes(unsigned int *base64bytes, size_t len)
+{
+    int pad = len > 0 && (len % 4 || base64bytes[len - 1] == 0);
+    const size_t new_len = ((len + 3) / 4 - pad) * 4;
+    unsigned int *hexbytes = malloc(sizeof(unsigned int) * new_len / 4 * 3 + pad);
+    for (int i = 0, j = 0; i < new_len; i += 4)
+    {
+        int n = base64bytes[i] << 18 | base64bytes[i + 1] << 12 | base64bytes[i + 2] << 6 | base64bytes[i + 3];
+        hexbytes[j++] = n >> 16;
+        hexbytes[j++] = n >> 8 & 0xFF;
+        hexbytes[j++] = n & 0xFF;
+    }
+
+    if (pad)
+    {
+        int n = base64bytes[new_len] << 18 | base64bytes[new_len + 1] << 12;
+        hexbytes[new_len - 1] = n >> 16;
+    }
+
+    return hexbytes;
+}
+
 unsigned int *hexbytes_to_base64bytes(unsigned int *hexbytes, size_t len)
 {
     unsigned int *base64bytes = malloc(sizeof(unsigned int) * len);
@@ -40,6 +81,7 @@ unsigned int *hexbytes_to_base64bytes(unsigned int *hexbytes, size_t len)
         base64bytes[i + 1] = ((hexbytes[i] & 0x3) << 4) | ((hexbytes[i + 1] & 0xF0) >> 4);
         base64bytes[i + 2] = ((hexbytes[i + 1] & 0xf) << 2) | ((hexbytes[i + 2] & 0xC0) >> 6);
         base64bytes[i + 3] = hexbytes[i + 2] & 0x3f;
+        printf("%d-%d-%d-%d\n", base64bytes[i], base64bytes[i + 1], base64bytes[i + 2], base64bytes[i + 3]);
     }
     free(hexbytes);
     return base64bytes;
@@ -50,7 +92,7 @@ char *base64_to_str(unsigned int *base64bytes, size_t len)
     char *str = malloc(sizeof(char) * len);
     for (int i = 0; i <= len; i++)
     {
-        strcat(str, byte_to_base64[(int)base64bytes[i]]);
+        strcat(str, index_to_base64[(int)base64bytes[i]]);
     }
     free(base64bytes);
     return str;
@@ -58,10 +100,19 @@ char *base64_to_str(unsigned int *base64bytes, size_t len)
 
 char *hex_to_base64(const char *input)
 {
-    int len = strlen(input) / 2;
+    size_t len = strlen(input) / 2;
     unsigned int *hex = str_to_hexbytes(input);
     unsigned int *base64 = hexbytes_to_base64bytes(hex, len);
     return base64_to_str(base64, len);
+}
+
+char *base64_to_hex(const char *input)
+{
+    size_t len = strlen(input);
+    unsigned int *one = str_to_base64bytes(input);
+    unsigned int *two = base64bytes_to_hexbytes(one, len);
+
+    return bytes_to_str(two, len * 3 / 2);
 }
 
 char *bytes_to_str(unsigned int *bytes, size_t len)
@@ -71,6 +122,11 @@ char *bytes_to_str(unsigned int *bytes, size_t len)
     {
         char tmp[3];
         sprintf(tmp, "%x", bytes[i]);
+        if (strlen(tmp) == 1)
+        {
+            tmp[1] = tmp[0];
+            tmp[0] = '0';
+        }
         tmp[2] = 0;
         strcat(str, tmp);
     }

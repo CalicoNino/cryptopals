@@ -3,6 +3,12 @@
 
 unsigned int *str_to_hexbytes(const char *hex_str);
 
+unsigned int *str_to_base64bytes(const char *base64_str);
+
+unsigned int *base64bytes_to_hexbytes(unsigned int *base64bytes, size_t len);
+
+char *base64_to_hex(const char *input);
+
 unsigned int *hexbytes_to_base64bytes(unsigned int *hexbytes, size_t len);
 
 char *base64_to_str(unsigned int *base64bytes, size_t len);
