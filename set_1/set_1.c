@@ -45,7 +45,10 @@ unsigned int *str_to_base64bytes(const char *base64_str)
     unsigned int *base64 = malloc(sizeof(unsigned int) * len);
     for (int i = 0; i < len; i++)
     {
-        base64[i] = B64index[(int)base64_str[i]];
+        if (base64_str[i] != '\n')
+        {
+            base64[i] = B64index[(int)base64_str[i]];
+        }
     }
     return base64;
 }
