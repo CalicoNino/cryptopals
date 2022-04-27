@@ -33,4 +33,6 @@ unsigned int *text_to_bytes(const char *text);
 
 int hamming_distance(unsigned int *input_1, unsigned int *input_2, size_t len);
 
+int guess_keysize(char *buffer, int max_keysize, int min_keysize);
+
 #endif // SET_1_

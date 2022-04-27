@@ -3,6 +3,8 @@
 #include <string.h>
 #include "set_1.h"
 
+#define ENOUGH 10000
+
 const char *index_to_base64[65] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
                                    "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
                                    "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d",
@@ -274,4 +276,40 @@ int hamming_distance(unsigned int *input_1, unsigned int *input_2, size_t len)
     }
 
     return distance;
+}
+
+int guess_keysize(char *buffer, int max_keysize, int min_keysize)
+{
+    double score_averages[40]; // index 0 -> MIN_KEYSIZE && index 39 -> MAX_KEYSIZE
+    double lowest_score = ENOUGH;
+    int index_lowest_score;
+
+    for (int i = min_keysize; i <= max_keysize; i++)
+    {
+        double score = 0;
+        int slice_size = i * 2;
+        for (int j = 0; j < strlen(buffer) / slice_size; j += slice_size)
+        {
+            char test_1[slice_size + 1];
+            char test_2[slice_size + 1];
+            strncpy(test_1, buffer + j, slice_size);
+            strncpy(test_2, buffer + slice_size + j, slice_size);
+            test_1[slice_size] = '\0';
+            test_2[slice_size] = '\0';
+
+            unsigned int *bytes_1 = text_to_bytes(test_1);
+            unsigned int *bytes_2 = text_to_bytes(test_2);
+
+            score += hamming_distance(bytes_1, bytes_2, i + 1);
+        }
+        score = score / (i + 0.0);
+        score = score / (slice_size + 0.0);
+        score_averages[i - 2] = score;
+        if (lowest_score > score)
+        {
+            lowest_score = score;
+            index_lowest_score = i;
+        }
+    }
+    return index_lowest_score;
 }
