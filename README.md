@@ -1,2 +1,2 @@
 # cryptopals
-Solutions in C for the cryptopals crypto challenges
+Solutions in Go for the cryptopals crypto challenges
